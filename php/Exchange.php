@@ -103,6 +103,7 @@ class Exchange {
         'bitkk',
         'bitlish',
         'bitmarket',
+        'bitmart',
         'bitmex',
         'bitsane',
         'bitso',
@@ -1950,7 +1951,7 @@ class Exchange {
         $trades = $this->fetch_trades($symbol, $since, $limit, $params);
         return $this->build_ohlcv($trades, $timeframe, $since, $limit);
     }
-    
+
     public function fetchStatus($params = array()) {
         return $this->fetch_status($params);
     }
