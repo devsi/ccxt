@@ -576,21 +576,28 @@ module.exports = class kraken extends Exchange {
     }
 
     parseLedgerEntry (item, currency = undefined) {
-        // { 'LTFK7F-N2CUX-PNY4SX': {   refid: "TSJTGT-DT7WN-GPPQMJ",
-        //                               time:  1520102320.555,
-        //                               type: "trade",
-        //                             aclass: "currency",
-        //                              asset: "XETH",
-        //                             amount: "0.1087194600",
-        //                                fee: "0.0000000000",
-        //                            balance: "0.2855851000"         }, ... }
+        //
+        //     {
+        //         'LTFK7F-N2CUX-PNY4SX': {
+        //             refid: "TSJTGT-DT7WN-GPPQMJ",
+        //             time:  1520102320.555,
+        //             type: "trade",
+        //             aclass: "currency",
+        //             asset: "XETH",
+        //             amount: "0.1087194600",
+        //             fee: "0.0000000000",
+        //             balance: "0.2855851000"
+        //         },
+        //         ...
+        //     }
+        //
         const id = this.safeString (item, 'id');
         let direction = undefined;
         const account = undefined;
         const referenceId = this.safeString (item, 'refid');
         const referenceAccount = undefined;
         const type = this.parseLedgerEntryType (this.safeString (item, 'type'));
-        const code = this.safeCurrencyCode (item, 'asset', currency);
+        const code = this.safeCurrencyCode (this.safeString (item, 'asset'), currency);
         let amount = this.safeFloat (item, 'amount');
         if (amount < 0) {
             direction = 'out';

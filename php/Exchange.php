@@ -34,7 +34,7 @@ use kornrunner\Eth;
 use kornrunner\Secp256k1;
 use kornrunner\Solidity;
 
-$version = '1.18.841';
+$version = '1.18.888';
 
 // rounding mode
 const TRUNCATE = 0;
@@ -51,7 +51,7 @@ const PAD_WITH_ZERO = 1;
 
 class Exchange {
 
-    const VERSION = '1.18.841';
+    const VERSION = '1.18.888';
 
     public static $eth_units = array (
         'wei'        => '1',
@@ -85,7 +85,6 @@ class Exchange {
         'acx',
         'allcoin',
         'anxpro',
-        'anybits',
         'bcex',
         'bequant',
         'bibox',
@@ -105,7 +104,6 @@ class Exchange {
         'bitmarket',
         'bitmart',
         'bitmex',
-        'bitsane',
         'bitso',
         'bitstamp',
         'bitstamp1',
@@ -159,7 +157,6 @@ class Exchange {
         'flowbtc',
         'foxbit',
         'fybse',
-        'fybsg',
         'gateio',
         'gdax',
         'gemini',
@@ -205,7 +202,6 @@ class Exchange {
         'tidebit',
         'tidex',
         'upbit',
-        'urdubit',
         'vaultoro',
         'vbtc',
         'virwox',
@@ -1700,15 +1696,16 @@ class Exchange {
         return $this->parse_orders($orders, $market, $since, $limit, $params);
     }
 
-    public function safe_currency_code($data, $key, $currency = null) {
+    public function safe_currency_code($currency_id, $currency = null) {
         $code = null;
-        $currency_id = $this->safe_string($data, $key);
-        if (is_array($this->currencies_by_id) && array_key_exists($currency_id, $this->currencies_by_id)) {
-            $currency = $this->currencies_by_id[$currency_id];
-        } else {
-            $code = $this->common_currency_code($currency_id);
+        if ($currency_id !== null) {
+            if ($this->currencies_by_id !== null && array_key_exists($currency_id, $this->currencies_by_id)) {
+                $code = $this->currencies_by_id[$currency_id]['code'];
+            } else {
+                $code = $this->common_currency_code(mb_strtoupper($currency_id));
+            }
         }
-        if ($currency !== null) {
+        if ($code === null && $currency !== null) {
             $code = $currency['code'];
         }
         return $code;

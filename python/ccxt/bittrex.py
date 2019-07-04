@@ -269,6 +269,7 @@ class bittrex (Exchange):
                 'subaccountId': None,
                 # see the implementation of fetchClosedOrdersV3 below
                 'fetchClosedOrdersMethod': 'fetch_closed_orders_v3',
+                'fetchClosedOrdersFilterBySince': True,
             },
             'commonCurrencies': {
                 'BITS': 'SWIFT',
@@ -740,13 +741,8 @@ class bittrex (Exchange):
         opened = self.parse8601(self.safe_string(transaction, 'Opened'))
         timestamp = opened if opened else updated
         type = 'deposit' if (opened is None) else 'withdrawal'
-        code = None
         currencyId = self.safe_string(transaction, 'Currency')
-        currency = self.safe_value(self.currencies_by_id, currencyId)
-        if currency is not None:
-            code = currency['code']
-        else:
-            code = self.common_currency_code(currencyId)
+        code = self.safeCurrencyCode(currencyId, currency)
         status = 'pending'
         if type == 'deposit':
             if currency is not None:
@@ -808,6 +804,12 @@ class bittrex (Exchange):
             return self.parse_order_v3(order, market)
         else:
             return self.parse_order_v2(order, market)
+
+    def parse_orders(self, orders, market=None, since=None, limit=None, params={}):
+        if self.options['fetchClosedOrdersFilterBySince']:
+            return super(bittrex, self).parse_orders(orders, market, since, limit, params)
+        else:
+            return super(bittrex, self).parse_orders(orders, market, None, limit, params)
 
     def parse_order_status(self, status):
         statuses = {
@@ -972,10 +974,7 @@ class bittrex (Exchange):
             elif symbol is not None:
                 currencyIds = symbol.split('/')
                 quoteCurrencyId = currencyIds[1]
-                if quoteCurrencyId in self.currencies_by_id:
-                    fee['currency'] = self.currencies_by_id[quoteCurrencyId]['code']
-                else:
-                    fee['currency'] = self.common_currency_code(quoteCurrencyId)
+                fee['currency'] = self.safeCurrencyCode(quoteCurrencyId)
         price = self.safe_float(order, 'Limit')
         cost = self.safe_float(order, 'Price')
         amount = self.safe_float(order, 'Quantity')
@@ -1082,7 +1081,7 @@ class bittrex (Exchange):
         if limit is not None:
             request['pageSize'] = limit
         if since is not None:
-            request['startDate'] = self.ymdhms(since) + 'Z'
+            request['startDate'] = self.ymdhms(since, 'T') + 'Z'
         market = None
         if symbol is not None:
             market = self.market(symbol)

@@ -32,7 +32,9 @@ const {
     , timeout
     , TimedOut
     , buildOHLCVC
-    , decimalToPrecision } = functions
+    , decimalToPrecision
+    , defaultFetch
+} = functions
 
 const {
     ExchangeError
@@ -44,8 +46,6 @@ const {
     , ExchangeNotAvailable } = require ('./errors')
 
 const { TRUNCATE, ROUND, DECIMAL_PLACES } = functions.precisionConstants
-
-const defaultFetch = typeof (fetch) === "undefined" ? require ('../static_dependencies/fetch-ponyfill/fetch-node') ().fetch : fetch
 
 // ----------------------------------------------------------------------------
 // web3 / 0x imports
@@ -1199,18 +1199,19 @@ module.exports = class Exchange {
         return this.filterBySymbolSinceLimit (result, symbol, since, limit)
     }
 
-    safeCurrencyCode (data, key, currency = undefined) {
-        let code = undefined;
-        const currencyId = this.safeString (data, key);
-        if (currencyId in this.currencies_by_id) {
-            currency = this.currencies_by_id[currencyId];
-        } else {
-            code = this.commonCurrencyCode (currencyId);
+    safeCurrencyCode (currencyId, currency = undefined) {
+        let code = undefined
+        if (currencyId !== undefined) {
+            if (this.currencies_by_id !== undefined && currencyId in this.currencies_by_id) {
+                code = this.currencies_by_id[currencyId]['code']
+            } else {
+                code = this.commonCurrencyCode (currencyId.toUpperCase ())
+            }
         }
-        if (currency !== undefined) {
-            code = currency['code'];
+        if (code === undefined && currency !== undefined) {
+            code = currency['code']
         }
-        return code;
+        return code
     }
 
     filterBySymbol (array, symbol = undefined) {
