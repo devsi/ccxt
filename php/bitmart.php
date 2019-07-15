@@ -374,7 +374,7 @@ class bitmart extends Exchange {
         $timestamp = $this->milliseconds ();
         $status = $this->parse_order_status($this->safe_string($order, 'status'));
         $symbol = $this->find_symbol($this->safe_string($order, 'symbol'), $market);
-        $info = $order['info'];
+        $info = $this->safe_value($order, 'info');
         if ($info === null) {
             $info = array_merge (array(), $order);
         }

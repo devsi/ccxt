@@ -349,7 +349,7 @@ class bitmart (Exchange):
         timestamp = self.milliseconds()
         status = self.parse_order_status(self.safe_string(order, 'status'))
         symbol = self.find_symbol(self.safe_string(order, 'symbol'), market)
-        info = order['info']
+        info = self.safe_value(order, 'info')
         if info is None:
             info = self.extend({}, order)
         order = self.map_order_response(order, market)
