@@ -98,6 +98,36 @@ class bitmart (Exchange):
                 '1w': 10080,
                 '1M': 43200,
             },
+            'fees': {
+                'trading': {
+                    'tierBased': True,
+                    'percentage': True,
+                    'taker': 0.001,
+                    'maker': 0.001,
+                    'tiers': {
+                        'taker': [
+                            [0, 0.20 / 100],
+                            [10, 0.18 / 100],
+                            [50, 0.16 / 100],
+                            [250, 0.14 / 100],
+                            [1000, 0.12 / 100],
+                            [5000, 0.10 / 100],
+                            [25000, 0.08 / 100],
+                            [50000, 0.06 / 100],
+                        ],
+                        'maker': [
+                            [0, 0.1 / 100],
+                            [10, 0.09 / 100],
+                            [50, 0.08 / 100],
+                            [250, 0.07 / 100],
+                            [1000, 0.06 / 100],
+                            [5000, 0.05 / 100],
+                            [25000, 0.04 / 100],
+                            [50000, 0.03 / 100],
+                        ],
+                    },
+                },
+            },
         })
 
     def sign_in(self, params={}):
@@ -313,7 +343,7 @@ class bitmart (Exchange):
                 'used': used,
                 'total': self.sum(free, used),
             }
-        return result
+        return self.parse_balance(result)
 
     def parse_order(self, order, market=None):
         timestamp = self.milliseconds()
