@@ -35,7 +35,7 @@ const Exchange  = require ('./js/base/Exchange')
 //-----------------------------------------------------------------------------
 // this is updated by vss.js when building
 
-const version = '1.18.911'
+const version = '1.18.927'
 
 Exchange.ccxtVersion = version
 
@@ -62,8 +62,6 @@ const exchanges = {
     'bithumb':                 require ('./js/bithumb.js'),
     'bitkk':                   require ('./js/bitkk.js'),
     'bitlish':                 require ('./js/bitlish.js'),
-    'bitmarket':               require ('./js/bitmarket.js'),
-    'bitmart':                 require ('./js/bitmart.js'),
     'bitmex':                  require ('./js/bitmex.js'),
     'bitso':                   require ('./js/bitso.js'),
     'bitstamp':                require ('./js/bitstamp.js'),
@@ -76,7 +74,6 @@ const exchanges = {
     'btcalpha':                require ('./js/btcalpha.js'),
     'btcbox':                  require ('./js/btcbox.js'),
     'btcchina':                require ('./js/btcchina.js'),
-    'btcexchange':             require ('./js/btcexchange.js'),
     'btcmarkets':              require ('./js/btcmarkets.js'),
     'btctradeim':              require ('./js/btctradeim.js'),
     'btctradeua':              require ('./js/btctradeua.js'),
@@ -84,7 +81,6 @@ const exchanges = {
     'buda':                    require ('./js/buda.js'),
     'bxinth':                  require ('./js/bxinth.js'),
     'cex':                     require ('./js/cex.js'),
-    'chbtc':                   require ('./js/chbtc.js'),
     'chilebit':                require ('./js/chilebit.js'),
     'cobinhood':               require ('./js/cobinhood.js'),
     'coinbase':                require ('./js/coinbase.js'),
@@ -99,7 +95,6 @@ const exchanges = {
     'coingi':                  require ('./js/coingi.js'),
     'coinmarketcap':           require ('./js/coinmarketcap.js'),
     'coinmate':                require ('./js/coinmate.js'),
-    'coinnest':                require ('./js/coinnest.js'),
     'coinone':                 require ('./js/coinone.js'),
     'coinspot':                require ('./js/coinspot.js'),
     'cointiger':               require ('./js/cointiger.js'),
